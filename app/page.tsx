@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     try {
       const t = localStorage.getItem('theme');
@@ -105,15 +108,14 @@ export default function Home() {
               <div style={{ width: '120px', height: '30px', background: 'var(--accent-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bg)', fontWeight: 'bold', letterSpacing: '1px' }}>
                 CUMPAQ
               </div>
-              <span></span>
             </div>
-            <nav>
+            <nav className={`nav-container ${mobileMenuOpen ? 'mobile-open' : ''}`}>
               <ul className="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" onClick={() => setMobileMenuOpen(false)}>Home</a></li>
+                <li><a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a></li>
+                <li><a href="#services" onClick={() => setMobileMenuOpen(false)}>Services</a></li>
+                <li><a href="#faq" onClick={() => setMobileMenuOpen(false)}>FAQ</a></li>
+                <li><a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a></li>
               </ul>
             </nav>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -123,6 +125,13 @@ export default function Home() {
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+              </button>
+              <button
+                className="mobile-menu-toggle"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? '✕' : '☰'}
               </button>
             </div>
           </div>
@@ -219,24 +228,85 @@ export default function Home() {
             <h2>Get In Touch</h2>
             <p>Ready to start your project? Contact us today for a free consultation.</p>
           </div>
-          <div className="contact-info">
-            <div className="contact-item">
-              <h3>Email Us</h3>
-              <p>cumpaqkrs@gmail.com</p>
+          <div className="contact-wrapper">
+            <div className="contact-info">
+              <div className="contact-item">
+                <h3>Email Us</h3>
+                <p>cumpaqkrs@gmail.com</p>
+                <a href="mailto:cumpaqkrs@gmail.com" className="email-link">cumpaqkrs@gmail.com</a>
+              </div>
+              <div className="contact-item">
+                <h3>WhatsApp</h3>
+                <p>+91 6282160755</p>
+                <a 
+                  href="https://wa.me/6282160755" 
+                  className="whatsapp-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  💬 Chat on WhatsApp
+                </a>
+              </div>
             </div>
-            <div className="contact-item">
-              <h3>WhatsApp</h3>
-              <p>+91 6282160755</p>
-              <a 
-                href="https://wa.me/6282160755" 
-                className="whatsapp-btn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                💬 Chat on WhatsApp
-              </a>
+
+            <div className="contact-form-container">
+              {formSubmitted ? (
+                <div className="form-success">
+                  <div className="success-icon">✓</div>
+                  <h3>Thank You!</h3>
+                  <p>Your message has been received. We will get back to you shortly.</p>
+                  <button className="btn btn-secondary" onClick={() => setFormSubmitted(false)}>
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form className="contact-form" onSubmit={(e) => {
+                  e.preventDefault();
+                  if (formData.name && formData.email && formData.message) {
+                    setFormSubmitted(true);
+                    setFormData({ name: '', email: '', message: '' });
+                  }
+                }}>
+                  <h3>Send a Message</h3>
+                  <div className="form-group">
+                    <label htmlFor="name">Your Name</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      required 
+                      placeholder="John Doe"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      required 
+                      placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message">Message</label>
+                    <textarea 
+                      id="message" 
+                      rows={4} 
+                      required 
+                      placeholder="Tell us about your project requirements..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    ></textarea>
+                  </div>
+                  <button type="submit" className="btn btn-primary form-submit-btn">
+                    Send Message 🚀
+                  </button>
+                </form>
+              )}
             </div>
-           
           </div>
         </div>
       </section>
@@ -252,7 +322,7 @@ export default function Home() {
               <span>CUMPAQ</span>
             </div>
             <p>Web Development Services</p>
-            <p>&copy; 2024 CUMPAQ. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} CUMPAQ. All rights reserved.</p>
           </div>
         </div>
       </footer>
