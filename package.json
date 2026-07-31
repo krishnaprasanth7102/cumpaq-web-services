@@ -9,9 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.0.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "next": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
@@ -19,8 +19,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.6.20",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1",
+    "eslint-config-next": "latest",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
