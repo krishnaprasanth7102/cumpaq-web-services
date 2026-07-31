@@ -1,9 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark' || t === 'light') return t;
+    } catch (e) {
+      // ignore
+    }
+    try {
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch (e) {
+      // ignore
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    } catch (e) {
+      // ignore
+    }
+  }, [theme]);
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
@@ -77,7 +102,7 @@ export default function Home() {
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <div style={{ width: '120px', height: '30px', background: '#2563eb', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+              <div style={{ width: '120px', height: '30px', background: 'var(--accent-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bg)', fontWeight: 'bold', letterSpacing: '1px' }}>
                 CUMPAQ
               </div>
               <span></span>
@@ -91,6 +116,15 @@ export default function Home() {
                 <li><a href="#contact">Contact</a></li>
               </ul>
             </nav>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button
+                className="theme-toggle"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -212,7 +246,7 @@ export default function Home() {
         <div className="container">
           <div className="footer-content">
             <div className="footer-logo">
-              <div style={{ width: '24px', height: '24px', background: 'white', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', fontWeight: 'bold', fontSize: '14px' }}>
+              <div style={{ width: '24px', height: '24px', background: 'var(--accent-light)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bg)', fontWeight: 'bold', fontSize: '14px' }}>
                 C
               </div>
               <span>CUMPAQ</span>
